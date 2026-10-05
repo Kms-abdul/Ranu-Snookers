@@ -84,7 +84,7 @@ export function Pos() {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
           {list.map(({ product: p, stock }) => (
             <button key={p.id} disabled={stock !== null && Number(stock) <= (cart[p.id] ?? 0)} onClick={() => setCart({ ...cart, [p.id]: (cart[p.id] ?? 0) + 1 })}
-              className="rounded-2xl border border-line bg-surface p-3 text-left hover:border-felt-400 disabled:opacity-40">
+              className="rounded-2xl border border-line bg-surface p-3 text-left hover:border-brass-500 disabled:opacity-40">
               <div className="font-medium">{p.name}</div>
               <div className="num text-brass-400">{money(p.price)}</div>
               <div className="text-xs text-ink-400">{stock !== null ? `${Number(stock)} in stock` : "made to order"}</div>

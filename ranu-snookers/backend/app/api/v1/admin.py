@@ -41,6 +41,7 @@ from app.schemas.domain import (
     TournamentOut,
     UserCreateIn,
     UserUpdateIn,
+    UserOut,
     UserWithRolesOut,
 )
 from app.schemas.settings import BranchSettings
@@ -99,9 +100,10 @@ def remove_holiday(branch_id: uuid.UUID, holiday_id: uuid.UUID, p: Principal = D
 
 # ============================================================================ users & roles
 def _user_out(u) -> UserWithRolesOut:
-    out = UserWithRolesOut.model_validate(u)
-    out.roles = [{"code": r.role.code, "name": r.role.name, "branch_id": r.branch_id} for r in u.roles]
-    return out
+    # Validate the plain user fields only; `u.roles` holds UserRole ORM rows, not dicts.
+    base = UserOut.model_validate(u).model_dump()
+    roles = [{"code": r.role.code, "name": r.role.name, "branch_id": r.branch_id} for r in u.roles]
+    return UserWithRolesOut(**base, roles=roles)
 
 
 @router.get("/users", response_model=list[UserWithRolesOut])

@@ -6,8 +6,8 @@ import { useBranchId } from "@/hooks/useBranch";
 import { Card, CardTitle, DataTable, Field, Input, Select, Stat, Td, Button } from "@/components/ui";
 import { money, num, todayLocal } from "@/lib/format";
 
-const axis = { stroke: "#83948b", fontSize: 11 };
-const tip = { contentStyle: { background: "#14221b", border: "1px solid #22342a", borderRadius: 12, color: "#f4f6f5" } };
+const axis = { stroke: "#7b756b", fontSize: 11 };
+const tip = { contentStyle: { background: "#ffffff", border: "1px solid #ebe4d6", borderRadius: 12, color: "#17140f", boxShadow: "0 8px 24px -12px rgba(23,20,15,.2)" } };
 
 export default function Reports() {
   const branchId = useBranchId();
@@ -53,22 +53,22 @@ export default function Reports() {
         <CardTitle>Revenue vs expenses</CardTitle>
         <div className="h-64">
           <ResponsiveContainer>
-            <BarChart data={series}><CartesianGrid stroke="#22342a" vertical={false} /><XAxis dataKey="period" {...axis} /><YAxis {...axis} /><Tooltip {...tip} formatter={(v) => money(v as number)} />
-              <Bar dataKey="collected" name="Collected" fill="#34b36a" radius={[4, 4, 0, 0]} /><Bar dataKey="expenses" name="Expenses" fill="#d4a64a" radius={[4, 4, 0, 0]} /></BarChart>
+            <BarChart data={series}><CartesianGrid stroke="#ebe4d6" vertical={false} /><XAxis dataKey="period" {...axis} /><YAxis {...axis} /><Tooltip {...tip} formatter={(v) => money(v as number)} />
+              <Bar dataKey="collected" name="Collected" fill="#17140f" radius={[4, 4, 0, 0]} /><Bar dataKey="expenses" name="Expenses" fill="#c9a24b" radius={[4, 4, 0, 0]} /></BarChart>
           </ResponsiveContainer>
         </div>
       </Card>
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardTitle>Peak hours (table-minutes)</CardTitle>
-          <div className="h-56"><ResponsiveContainer><BarChart data={peakData}><XAxis dataKey="label" {...axis} /><YAxis {...axis} /><Tooltip {...tip} /><Bar dataKey="table_minutes" name="Minutes" fill="#38bdf8" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></div>
+          <div className="h-56"><ResponsiveContainer><BarChart data={peakData}><XAxis dataKey="label" {...axis} /><YAxis {...axis} /><Tooltip {...tip} /><Bar dataKey="table_minutes" name="Minutes" fill="#c9a24b" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></div>
         </Card>
         <Card>
           <CardTitle>Table utilisation</CardTitle>
           <div className="space-y-1.5">
             {(util.data ?? []).map((u: any) => (
               <div key={u.table_id} className="flex items-center gap-2 text-sm"><span className="w-20 shrink-0">{u.name}</span>
-                <div className="h-3 flex-1 rounded bg-felt-800"><div className="h-3 rounded bg-felt-400" style={{ width: `${Math.min(100, u.utilization_percent)}%` }} /></div>
+                <div className="h-3 flex-1 rounded-full bg-surface-2"><div className="h-3 rounded-full bg-gradient-to-r from-brass-500 to-[#b48d38]" style={{ width: `${Math.min(100, u.utilization_percent)}%` }} /></div>
                 <span className="num w-14 text-right">{u.utilization_percent}%</span></div>
             ))}
           </div>

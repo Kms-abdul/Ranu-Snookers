@@ -16,7 +16,7 @@ export function CustomerPicker({ value, onChange }: { value: PickedCustomer | nu
 
   if (value) {
     return (
-      <div className="flex items-center justify-between rounded-lg border border-felt-500/50 bg-felt-800/40 px-3 py-2">
+      <div className="flex items-center justify-between rounded-lg border border-brass-500/50 bg-brass-50 px-3 py-2">
         <div>
           <div className="font-medium">{value.name}</div>
           <div className="text-xs text-ink-400">{value.phone}{value.id ? "" : " · new"}</div>

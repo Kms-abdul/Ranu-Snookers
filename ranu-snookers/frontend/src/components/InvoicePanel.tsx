@@ -66,12 +66,12 @@ export function InvoicePanel({ invoiceId, onDone }: { invoiceId: string; onDone?
         <ul className="divide-y divide-line rounded-lg border border-line text-sm">
           {inv.lines.map((l, i) => (
             <li key={i} className="flex justify-between gap-3 px-3 py-2">
-              <span className={l.line_type === "DISCOUNT" ? "text-emerald-300" : ""}>{l.description}{l.line_type === "PRODUCT" && num(l.quantity) > 1 ? ` × ${num(l.quantity)}` : ""}</span>
+              <span className={l.line_type === "DISCOUNT" ? "text-emerald-700" : ""}>{l.description}{l.line_type === "PRODUCT" && num(l.quantity) > 1 ? ` × ${num(l.quantity)}` : ""}</span>
               <span className="num whitespace-nowrap">{money(l.amount)}</span>
             </li>
           ))}
           {inv.adjustments.map((a, i) => (
-            <li key={`a${i}`} className="flex justify-between gap-3 px-3 py-2 text-emerald-300"><span>{a.reason}</span><span className="num">{money(a.amount)}</span></li>
+            <li key={`a${i}`} className="flex justify-between gap-3 px-3 py-2 text-emerald-700"><span>{a.reason}</span><span className="num">{money(a.amount)}</span></li>
           ))}
         </ul>
         <dl className="num grid grid-cols-2 gap-y-1 text-sm">
@@ -119,7 +119,7 @@ export function InvoicePanel({ invoiceId, onDone }: { invoiceId: string; onDone?
 
       <div className="flex flex-wrap gap-2">
         <Button variant="secondary" onClick={() => window.print()}>Print receipt</Button>
-        <a className="inline-flex h-10 items-center rounded-lg border border-line px-4 text-sm hover:border-felt-500" target="_blank" rel="noreferrer" href={waLink("", receiptText)}>Share on WhatsApp</a>
+        <a className="inline-flex h-10 items-center rounded-lg border border-line px-4 text-sm hover:border-brass-500" target="_blank" rel="noreferrer" href={waLink("", receiptText)}>Share on WhatsApp</a>
       </div>
     </div>
   );

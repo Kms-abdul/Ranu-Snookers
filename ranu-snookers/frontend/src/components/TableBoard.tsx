@@ -11,6 +11,7 @@ import { useNow } from "@/hooks/useRealtime";
 import { cn } from "@/lib/cn";
 import { duration, money, time } from "@/lib/format";
 import { useAuth } from "@/stores/auth";
+import { TableArt, tableImage } from "@/components/TableArt";
 
 function elapsed(s: Session, now: number): number {
   if (!s.started_at) return 0;
@@ -26,32 +27,36 @@ export function TableCard({ row, onOpen }: { row: BoardRow; onOpen: () => void }
   const offline = row.devices.some((d) => d.status !== "ONLINE");
   return (
     <button onClick={onOpen} aria-label={`Table ${row.table.table_number}`}
-      className={cn("flex min-h-36 flex-col rounded-2xl border-2 bg-surface p-3 text-left transition hover:bg-surface-2 active:scale-[0.99]", TABLE_BORDER[row.table.status] ?? "border-line")}>
-      <div className="w-full space-y-1">
-        <div className="flex items-baseline justify-between gap-2">
-          <div className="truncate text-lg font-bold leading-tight">{row.table.name}</div>
-          <div className="shrink-0 text-xs text-ink-300">{row.table.game_type.name}</div>
+      className={cn("group flex min-h-36 flex-col overflow-hidden rounded-2xl border-2 bg-white text-left shadow-[var(--shadow-card)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] active:scale-[0.99]", TABLE_BORDER[row.table.status] ?? "border-line")}>
+      <TableArt src={tableImage(row.table)} className="h-24 w-full">
+        <div className="flex h-full flex-col justify-between p-2.5">
+          <div className="flex justify-end"><span className="rounded-full bg-white/95 shadow-sm"><TableStatusBadge status={row.table.status} /></span></div>
+          <div className="flex items-baseline justify-between gap-2">
+            <div className="font-display truncate text-lg font-semibold leading-tight text-white drop-shadow">{row.table.name}</div>
+            <div className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/85">{row.table.game_type.name}</div>
+          </div>
         </div>
-        <TableStatusBadge status={row.table.status} />
+      </TableArt>
+      <div className="flex w-full flex-1 flex-col p-3">
+        {running && s ? (
+          <div className="w-full space-y-0.5">
+            <div className="num text-2xl font-semibold text-sky-700">{duration(elapsed(s, now))}</div>
+            <div className="truncate text-xs text-ink-300">{row.customer_name ?? "Walk-in"} · {s.detection_method}</div>
+            {row.live_bill && <div className="num text-sm font-semibold text-brass-400">{money(row.live_bill.estimated_total)} so far</div>}
+            {s.planned_end_at && <div className={cn("text-xs", endingSoon ? "font-semibold text-amber-700" : "text-ink-400")}>Ends {time(s.planned_end_at)}</div>}
+          </div>
+        ) : row.next_booking ? (
+          <div className="mt-auto text-xs text-amber-800">Next: {time(row.next_booking.start_at)} · {row.next_booking.customer_name}</div>
+        ) : (
+          <div className="mt-auto text-xs text-ink-400"><span className="num font-semibold text-ink-100">₹{Number(row.table.hourly_rate).toFixed(0)}</span>/hr · tap to start</div>
+        )}
+        {row.devices.length > 0 && (
+          <div className="mt-2 flex items-center gap-1" aria-label="Devices">
+            {row.devices.map((d) => <span key={d.device_id} title={`${d.device_id}: ${d.status}`} className={cn("size-2 rounded-full", d.status === "ONLINE" ? "bg-emerald-500" : "bg-red-500")} />)}
+            {offline && <span className="text-[10px] text-red-600">device offline</span>}
+          </div>
+        )}
       </div>
-      {running && s ? (
-        <div className="mt-2 w-full space-y-0.5">
-          <div className="num text-2xl font-semibold text-sky-200">{duration(elapsed(s, now))}</div>
-          <div className="truncate text-xs text-ink-300">{row.customer_name ?? "Walk-in"} · {s.detection_method}</div>
-          {row.live_bill && <div className="num text-sm text-brass-400">{money(row.live_bill.estimated_total)} so far</div>}
-          {s.planned_end_at && <div className={cn("text-xs", endingSoon ? "font-semibold text-amber-300" : "text-ink-400")}>Ends {time(s.planned_end_at)}</div>}
-        </div>
-      ) : row.next_booking ? (
-        <div className="mt-auto pt-2 text-xs text-amber-200">Next: {time(row.next_booking.start_at)} · {row.next_booking.customer_name}</div>
-      ) : (
-        <div className="mt-auto pt-2 text-xs text-ink-400">₹{Number(row.table.hourly_rate).toFixed(0)}/hr</div>
-      )}
-      {row.devices.length > 0 && (
-        <div className="mt-1 flex gap-1" aria-label="Devices">
-          {row.devices.map((d) => <span key={d.device_id} title={`${d.device_id}: ${d.status}`} className={cn("size-2 rounded-full", d.status === "ONLINE" ? "bg-emerald-400" : "bg-red-500")} />)}
-          {offline && <span className="text-[10px] text-red-300">device offline</span>}
-        </div>
-      )}
     </button>
   );
 }
@@ -61,7 +66,7 @@ export function TableBoard({ rows }: { rows: BoardRow[] }) {
   const row = rows.find((r) => r.table.id === open) ?? null;
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-[repeat(auto-fill,minmax(170px,1fr))]">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
         {rows.map((r) => <TableCard key={r.table.id} row={r} onOpen={() => setOpen(r.table.id)} />)}
       </div>
       {row && <TableSheet row={row} onClose={() => setOpen(null)} />}
@@ -188,7 +193,7 @@ function TableSheet({ row, onClose }: { row: BoardRow; onClose: () => void }) {
               </Select>
             </Field>
             {errCode === "TABLE_RESERVED" && (
-              <label className="flex items-center gap-2 text-sm text-amber-200"><input type="checkbox" checked={override} onChange={(e) => setOverride(e.target.checked)} /> Start anyway (reservation override, audited)</label>
+              <label className="flex items-center gap-2 text-sm text-amber-800"><input type="checkbox" checked={override} onChange={(e) => setOverride(e.target.checked)} /> Start anyway (reservation override, audited)</label>
             )}
             <Button size="xl" className="w-full" loading={act.isPending && act.variables === "start"} onClick={() => act.mutate("start")}>Start game</Button>
             {can("tables.manage") && (

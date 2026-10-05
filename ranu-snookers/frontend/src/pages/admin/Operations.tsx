@@ -42,7 +42,7 @@ export function Inventory() {
             <DataTable head={["When", "Product", "Type", "Qty", "Balance", "Ref / note"]}>
               {(ledger.data?.items ?? []).map((t) => (
                 <tr key={t.id}><Td>{dateTime(t.created_at)}</Td><Td>{name(t.product_id)}</Td><Td><Badge>{t.txn_type}</Badge></Td>
-                  <Td className={`num ${num(t.quantity) < 0 ? "text-red-300" : "text-emerald-300"}`}>{num(t.quantity) > 0 ? "+" : ""}{Number(t.quantity)}</Td><Td className="num">{Number(t.balance_after)}</Td><Td className="text-xs">{t.reference ?? t.note}</Td></tr>
+                  <Td className={`num ${num(t.quantity) < 0 ? "text-red-600" : "text-emerald-700"}`}>{num(t.quantity) > 0 ? "+" : ""}{Number(t.quantity)}</Td><Td className="num">{Number(t.balance_after)}</Td><Td className="text-xs">{t.reference ?? t.note}</Td></tr>
               ))}
             </DataTable>
           </Card>
@@ -138,7 +138,7 @@ export function ShiftExpenses() {
         <DataTable head={["Opened", "Closed", "Opening", "Expected", "Counted", "Variance", "Status"]}>
           {(history.data ?? []).map((h) => (
             <tr key={h.id}><Td>{dateTime(h.opened_at)}</Td><Td>{dateTime(h.closed_at)}</Td><Td className="num">{money(h.opening_cash)}</Td><Td className="num">{money(h.expected_cash)}</Td>
-              <Td className="num">{h.counted_cash ? money(h.counted_cash) : "—"}</Td><Td className={`num ${num(h.variance) !== 0 ? "text-red-300" : ""}`}>{h.variance ? money(h.variance) : "—"}</Td><Td><StatusBadge status={h.status} /></Td></tr>
+              <Td className="num">{h.counted_cash ? money(h.counted_cash) : "—"}</Td><Td className={`num ${num(h.variance) !== 0 ? "text-red-600" : ""}`}>{h.variance ? money(h.variance) : "—"}</Td><Td><StatusBadge status={h.status} /></Td></tr>
           ))}
         </DataTable>
       </Card>

@@ -54,7 +54,7 @@ export default function Devices() {
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {OPTIONS.map((o) => (
             <Card key={o.k}><div className="font-semibold text-brass-400">{o.k}</div><div className="text-xs text-ink-400">{o.cost}</div>
-              <p className="mt-2 text-sm text-ink-300">{o.how}</p><p className="mt-2 text-xs text-emerald-300">+ {o.good}</p><p className="text-xs text-amber-300">− {o.watch}</p></Card>
+              <p className="mt-2 text-sm text-ink-300">{o.how}</p><p className="mt-2 text-xs text-emerald-700">+ {o.good}</p><p className="text-xs text-amber-700">− {o.watch}</p></Card>
           ))}
         </div>
       )}

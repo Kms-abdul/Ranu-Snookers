@@ -8,8 +8,8 @@ export const TABLE_LABEL: Record<string, string> = {
   AVAILABLE: "Available", RESERVED: "Reserved", OCCUPIED: "Occupied", GAME_STARTED: "Game active", PAUSED: "Paused", MAINTENANCE: "Maintenance", BLOCKED: "Blocked",
 };
 export const TABLE_BORDER: Record<string, string> = {
-  AVAILABLE: "border-emerald-500/40", RESERVED: "border-amber-400/50", OCCUPIED: "border-red-500/50", GAME_STARTED: "border-sky-400/60",
-  PAUSED: "border-orange-400/60", MAINTENANCE: "border-ink-500/50", BLOCKED: "border-ink-500/50",
+  AVAILABLE: "border-emerald-500/30", RESERVED: "border-amber-400/70", OCCUPIED: "border-red-400/70", GAME_STARTED: "border-sky-400/80",
+  PAUSED: "border-orange-400/80", MAINTENANCE: "border-line", BLOCKED: "border-line",
 };
 
 const GENERIC: Record<string, Tone> = {

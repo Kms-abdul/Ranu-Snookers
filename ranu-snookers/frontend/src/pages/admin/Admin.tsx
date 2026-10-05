@@ -236,8 +236,8 @@ function MatchCard({ m, pname, onResult }: { m: TournamentMatch; pname: (id: str
   const playable = m.status === "SCHEDULED" && m.player1_id && m.player2_id;
   return (
     <div className="rounded-xl border border-line p-3 text-sm">
-      <div className={`flex justify-between ${m.winner_id === m.player1_id && m.winner_id ? "font-semibold text-emerald-300" : ""}`}><span>{pname(m.player1_id)}</span><span>{m.score1 ?? ""}</span></div>
-      <div className={`flex justify-between ${m.winner_id === m.player2_id && m.winner_id ? "font-semibold text-emerald-300" : ""}`}><span>{pname(m.player2_id)}</span><span>{m.score2 ?? ""}</span></div>
+      <div className={`flex justify-between ${m.winner_id === m.player1_id && m.winner_id ? "font-semibold text-emerald-700" : ""}`}><span>{pname(m.player1_id)}</span><span>{m.score1 ?? ""}</span></div>
+      <div className={`flex justify-between ${m.winner_id === m.player2_id && m.winner_id ? "font-semibold text-emerald-700" : ""}`}><span>{pname(m.player2_id)}</span><span>{m.score2 ?? ""}</span></div>
       {playable && (
         <div className="mt-2 flex gap-1">
           <Input className="h-8" aria-label="Score 1" value={a} onChange={(e) => setA(e.target.value)} /><Input className="h-8" aria-label="Score 2" value={b} onChange={(e) => setB(e.target.value)} />

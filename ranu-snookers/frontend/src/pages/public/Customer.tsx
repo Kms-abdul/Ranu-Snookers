@@ -92,7 +92,7 @@ export function QrStart() {
             <Field label="Your name"><Input value={name} onChange={(e) => setName(e.target.value)} /></Field>
             <Field label="Mobile"><Input inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} /></Field>
             <Button size="xl" className="w-full" loading={start.isPending} disabled={phone.replace(/\D/g, "").length < 10} onClick={() => start.mutate()}>Start game</Button>
-            {start.data && start.data.outcome !== "SESSION_STARTED" && <div className="text-sm text-amber-200">Request sent to the counter — staff will start your table.</div>}
+            {start.data && start.data.outcome !== "SESSION_STARTED" && <div className="text-sm text-amber-800">Request sent to the counter — staff will start your table.</div>}
             <ErrorBox error={start.error} />
           </>
         )}

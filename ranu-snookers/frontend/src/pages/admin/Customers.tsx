@@ -40,7 +40,7 @@ export default function Customers() {
           <DataTable head={["Customer", "Phone", "Outstanding", ""]} empty={dues.data?.length === 0}>
             {(dues.data ?? []).map((d) => (
               <tr key={d.customer_id}>
-                <Td>{d.name}</Td><Td>{d.phone}</Td><Td className="num font-semibold text-amber-300">{money(d.balance)}</Td>
+                <Td>{d.name}</Td><Td>{d.phone}</Td><Td className="num font-semibold text-amber-700">{money(d.balance)}</Td>
                 <Td className="flex gap-2"><Button size="sm" onClick={() => setOpen(d.customer_id)}>Open</Button>
                   <a className="text-xs text-brass-400 underline" target="_blank" rel="noreferrer" href={waLink(d.phone, `Hi ${d.name}, a gentle reminder: your RANU Snookers balance is ${money(d.balance)}. Thank you!`)}>WhatsApp reminder</a></Td>
               </tr>
@@ -174,7 +174,7 @@ export function Memberships() {
           <Field label="Customer">
             <Input placeholder="Search name/phone" value={q} onChange={(e) => setQ(e.target.value)} />
             <div className="mt-1 flex flex-wrap gap-1">{(found.data?.items ?? []).map((c) => (
-              <button key={c.id} onClick={() => setSell({ ...sell, customer_id: c.id })} className={`rounded-full px-2 py-1 text-xs ${sell.customer_id === c.id ? "bg-felt-500" : "bg-surface-2"}`}>{c.name} · {c.phone}</button>
+              <button key={c.id} onClick={() => setSell({ ...sell, customer_id: c.id })} className={`rounded-full px-2 py-1 text-xs ${sell.customer_id === c.id ? "bg-brass-500 text-felt-950 font-semibold" : "bg-surface-2"}`}>{c.name} · {c.phone}</button>
             ))}</div>
           </Field>
           <Field label="Plan"><Select value={sell.plan_id} onChange={(e) => setSell({ ...sell, plan_id: e.target.value })}><option value="">Choose…</option>{(plans.data ?? []).map((p) => <option key={p.id} value={p.id}>{p.name} · {money(p.price)}</option>)}</Select></Field>

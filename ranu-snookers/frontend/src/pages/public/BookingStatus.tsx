@@ -75,7 +75,7 @@ export default function BookingStatus() {
 
         {b.status === "HELD" && (
           <>
-            <div className="text-center text-sm text-amber-200">Table held for you · <span className="num font-semibold">{Math.floor(left / 60)}:{String(left % 60).padStart(2, "0")}</span> left to pay</div>
+            <div className="text-center text-sm text-amber-800">Table held for you · <span className="num font-semibold">{Math.floor(left / 60)}:{String(left % 60).padStart(2, "0")}</span> left to pay</div>
             <Button variant="brass" size="xl" className="w-full" loading={pay.isPending} disabled={left === 0} onClick={() => pay.mutate()}>
               Pay deposit {money(b.deposit_amount)}{state?.checkout?.mode === "mock" ? " (demo)" : ""}
             </Button>
@@ -85,7 +85,7 @@ export default function BookingStatus() {
         {confirmed && (
           <div className="space-y-3 text-center">
             <div className="text-3xl">🎱</div>
-            <div className="text-lg font-semibold text-emerald-300">You're booked!</div>
+            <div className="text-lg font-semibold text-emerald-700">You're booked!</div>
             <p className="text-sm text-ink-300">Show reference <b>{b.reference}</b> at the counter. We've sent the details to your WhatsApp.</p>
             <a className="inline-block text-sm text-brass-400 underline" target="_blank" rel="noreferrer"
               href={waLink("", `My RANU booking ${b.reference}: ${b.table.name}, ${dateTime(b.start_at)}`)}>Share booking</a>
