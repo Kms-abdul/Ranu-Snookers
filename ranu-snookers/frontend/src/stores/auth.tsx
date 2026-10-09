@@ -52,19 +52,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    let retry: ReturnType<typeof setTimeout> | undefined;
+    const loadPublicBranches = async () => {
+      try {
+        const list = await api<Branch[]>("/public/branches", { auth: false });
+        setBranches(list);
+        setBranchState(list[0] ?? null);
+      } catch {
+        // Server unreachable: keep trying so pages fill in as soon as it is back.
+        retry = setTimeout(loadPublicBranches, 5000);
+      }
+    };
     (async () => {
       if (await refreshSession()) await loadMe();
-      else {
-        try {
-          const list = await api<Branch[]>("/public/branches", { auth: false });
-          setBranches(list);
-          setBranchState(list[0] ?? null);
-        } catch {
-          /* offline: public pages will show their own errors */
-        }
-      }
+      else await loadPublicBranches();
       setReady(true);
     })();
+    return () => clearTimeout(retry);
   }, [loadMe]);
 
   const finish = useCallback(async (t: TokenOut) => {

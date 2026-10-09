@@ -106,7 +106,7 @@ export default function Book() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-10">
-      <section className="relative -mx-4 mb-4 grid items-center gap-2 overflow-hidden px-4 pt-8 lg:grid-cols-[0.9fr_1.1fr] lg:pt-4">
+      <section className="relative -mx-4 mb-8 grid items-center gap-2 px-4 pt-8 lg:grid-cols-[0.9fr_1.1fr] lg:pt-4">
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[radial-gradient(700px_380px_at_75%_30%,rgba(201,162,75,0.16),transparent_70%)]" />
         <div className="relative z-10 space-y-5 py-6">
           <div className="eyebrow fade-up">Reserve your table</div>

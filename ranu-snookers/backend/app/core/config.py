@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 
-from pydantic import Field, model_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -82,6 +82,17 @@ class Settings(BaseSettings):
     SEED_DEMO_DATA: bool = False
 
     trusted_proxies: list[str] = Field(default_factory=list)
+
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def _normalize_database_url(cls, v: str) -> str:
+        """Managed hosts hand out `postgres://` / `postgresql://`; SQLAlchemy needs the psycopg 3 driver name."""
+        if isinstance(v, str):
+            v = v.strip()
+            for old in ("postgres://", "postgresql://"):
+                if v.startswith(old):
+                    return "postgresql+psycopg://" + v[len(old):]
+        return v
 
     @model_validator(mode="after")
     def _validate_production(self) -> Settings:

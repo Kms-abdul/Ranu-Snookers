@@ -88,8 +88,11 @@ export const patch = <T,>(p: string, body?: unknown) => api<T>(p, { method: "PAT
 export const put = <T,>(p: string, body?: unknown) => api<T>(p, { method: "PUT", body });
 export const del = <T,>(p: string) => api<T>(p, { method: "DELETE" });
 
+/** Vercel rewrites can proxy HTTP but not WebSockets, so production sets VITE_WS_BASE to the backend's own URL. */
+const WS_BASE = import.meta.env.VITE_WS_BASE as string | undefined;
+
 export function wsUrl(path: string): string {
-  const base = new URL(API_BASE, window.location.origin);
+  const base = new URL(WS_BASE || API_BASE, window.location.origin);
   base.protocol = base.protocol === "https:" ? "wss:" : "ws:";
   return `${base.toString().replace(/\/$/, "")}${path}`;
 }

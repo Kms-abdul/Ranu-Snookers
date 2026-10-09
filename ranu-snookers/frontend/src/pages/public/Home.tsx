@@ -21,6 +21,11 @@ function SectionHead({ eyebrow, title, sub }: { eyebrow: string; title: string; 
   );
 }
 
+/** Grey shimmer blocks shown while live data is loading. */
+function Skeleton({ className }: { className?: string }) {
+  return <div className={cn("animate-pulse rounded-2xl bg-gradient-to-r from-stone-100 via-stone-50 to-stone-100", className)} />;
+}
+
 const STATUS_TONE = { AVAILABLE: "green", RESERVED: "amber", MAINTENANCE: "gray" } as const;
 
 export default function Home() {
@@ -30,14 +35,24 @@ export default function Home() {
   const plans = useQuery({ queryKey: ["public-plans"], queryFn: () => get<Plan[]>("/public/membership-plans") });
   const tables = useQuery({ queryKey: ["public-tables", branch?.id], queryFn: () => get<PublicTable[]>(`/public/branches/${branch!.id}/tables`), enabled: !!branch });
   const timeline = useQuery({ queryKey: ["timeline", branch?.id, "today"], queryFn: () => get<Timeline>("/public/timeline", { branch_id: branch!.id, day: todayLocal() }), enabled: !!branch, refetchInterval: 60000 });
+  const offline = games.isError || plans.isError || tables.isError || timeline.isError || (!branch && games.isFetched && !games.data);
   const freeNow = timeline.data?.tables.filter((t) => t.status === "AVAILABLE").length ?? 0;
   const tableCount = tables.data?.length ?? timeline.data?.tables.length ?? 0;
   const fromRate = Math.min(...(games.data ?? []).map((g) => Number(g.default_hourly_rate)).filter((n) => n > 0));
 
   return (
     <div>
+      {offline && (
+        <div role="status" className="mx-auto mt-4 max-w-6xl px-4">
+          <div className="flex items-center gap-3 rounded-2xl border border-amber-300/60 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            <span className="size-2 shrink-0 animate-pulse rounded-full bg-amber-500" />
+            Can’t reach the club server right now — live tables, prices and plans will appear automatically when it’s back.
+          </div>
+        </div>
+      )}
+
       {/* ------------------------------------------------------------ hero */}
-      <section className="relative overflow-hidden pt-12 md:pt-16">
+      <section className="relative pb-10 pt-12 md:pt-16">
         <div className="mx-auto grid max-w-6xl items-end gap-8 px-4 md:grid-cols-[1.1fr_1fr] md:gap-14">
           <div className="fade-up space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-600/20 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
@@ -81,6 +96,7 @@ export default function Home() {
       <section id="games" className="mx-auto max-w-6xl scroll-mt-24 px-4 py-16">
         <SectionHead eyebrow="Games" title="Choose your game" sub="Every table is maintained to match standard — fresh cloth, true cushions, polished balls." />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {!games.data && Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-64" />)}
           {(games.data ?? []).map((g, i) => (
             <Reveal key={g.id} delay={i * 120}><Link to="/book" className="group overflow-hidden rounded-2xl border border-line bg-white shadow-[var(--shadow-card)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]">
               <TableArt src={gameImage(g.code)} className="aspect-[16/10] transition duration-500 group-hover:scale-[1.03]" shade={false} />
@@ -101,6 +117,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-4">
           <SectionHead eyebrow="Live" title="Tables right now" sub="Updates automatically. “Free from” shows when each table is next available today." />
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {!timeline.data && Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-52" />)}
             {(timeline.data?.tables ?? []).map((t, i) => {
               const tone = STATUS_TONE[t.status as keyof typeof STATUS_TONE] ?? "red";
               return (
@@ -134,6 +151,9 @@ export default function Home() {
           <table className="w-full text-sm">
             <thead className="bg-surface-2 text-left text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400"><tr><th className="px-5 py-3">Table</th><th className="px-5 py-3">Game</th><th className="px-5 py-3 text-right">Per hour</th></tr></thead>
             <tbody className="divide-y divide-line">
+              {!tables.data && Array.from({ length: 5 }, (_, i) => (
+                <tr key={i}><td className="px-5 py-3.5" colSpan={3}><Skeleton className="h-4 rounded-md" /></td></tr>
+              ))}
               {(tables.data ?? []).map((t) => (
                 <tr key={t.id} className="transition hover:bg-brass-50/60">
                   <td className="px-5 py-3 font-medium">{t.name}</td>
@@ -152,6 +172,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-4">
           <SectionHead eyebrow="Membership" title="Play more, pay less" sub="Buy or renew at the counter — you get a RANU member card to tap at the table." />
           <div className="grid gap-5 md:grid-cols-3">
+            {!plans.data && Array.from({ length: 3 }, (_, i) => <Skeleton key={i} className="h-80" />)}
             {(plans.data ?? []).map((p, i) => {
               const featured = p.tier === "GOLD";
               return (

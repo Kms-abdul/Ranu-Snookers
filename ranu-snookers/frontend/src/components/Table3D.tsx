@@ -62,7 +62,7 @@ export function Table3D({ className, wide }: { className?: string; wide?: boolea
   // --u = 1% of the plane width in px, used for the ball's lift off the felt.
   useEffect(() => {
     const el = plane.current;
-    if (!el) return;
+    if (!el || typeof ResizeObserver === "undefined") return;
     const ro = new ResizeObserver(([e]) => el.style.setProperty("--u", `${e.contentRect.width / 100}px`));
     ro.observe(el);
     return () => ro.disconnect();
@@ -82,7 +82,7 @@ export function Table3D({ className, wide }: { className?: string; wide?: boolea
         <div className={cn("light-pulse mx-auto -mt-1 h-40 w-[17rem] sm:h-56 bg-[radial-gradient(ellipse_at_top,rgba(255,236,190,0.55),rgba(255,236,190,0.12)_45%,transparent_70%)] blur-sm [clip-path:polygon(38%_0,62%_0,100%_100%,0_100%)] sm:w-[34rem]", wide && "lg:h-72 lg:w-[52rem]")} />
       </div>
 
-      <div className={cn("relative mx-auto pt-[16%]", wide ? "w-[min(1060px,88%)] lg:pt-[12%]" : "w-[min(720px,84%)]")}>
+      <div className={cn("relative mx-auto pt-[16%]", wide ? "w-[min(980px,80%)] lg:pt-[11%]" : "w-[min(720px,84%)]")}>
         <div ref={plane} className="table3d aspect-[16/9] w-full">
           <div className="table3d-shadow" />
           {/* rail thickness */}

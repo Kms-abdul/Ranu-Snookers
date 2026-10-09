@@ -29,7 +29,7 @@ export function PublicLayout() {
   const { me, isStaff, branch } = useAuth();
   const [open, setOpen] = useState(false);
   return (
-    <div className="felt-bg flex min-h-full flex-col">
+    <div className="felt-bg flex min-h-full flex-col overflow-x-clip">
       <header className="sticky top-0 z-40 border-b border-line/80 bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex h-[72px] max-w-6xl items-center justify-between gap-4 px-4">
           <Logo />
